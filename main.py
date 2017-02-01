@@ -3,6 +3,11 @@ import os
 import jinja2
 import webapp2
 import logging
+import json
+import urllib
+
+# this is used for constructing URLs to google's APIS
+from googleapiclient.discovery import build
 
 API_KEY = 'AIzaSyDrr-4elELZpZurOEVIK6hBsBf6WnSiySs'
 
