@@ -4,6 +4,8 @@ import jinja2
 import webapp2
 import logging
 
+API_KEY = 'AIzaSyDrr-4elELZpZurOEVIK6hBsBf6WnSiySs'
+
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
