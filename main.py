@@ -16,6 +16,7 @@ app.config['DEBUG'] = True
 # Note: We don't need to call run() since our application is embedded within
 # the App Engine WSGI application server.
 
+API_KEY = 'AIzaSyDhbRM4UUBRqouCvuTD-eNMTcdUx7ukN1k'
 
 @app.route('/')
 def hello():
