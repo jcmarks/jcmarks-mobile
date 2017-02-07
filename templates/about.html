@@ -46,15 +46,28 @@
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
 	<h1>About</h1>
-        <p>Byte 2 was concerned with looking at the 4 C's of data quality. This is a discussion of the data quality</p>
+        <p>Byte 2 was concerned with looking at the 4 C's of data quality. This is a discussion of quality of the ski resort data.</p>
       </div>
 
 <h2>Completeness</h2>
 <h3>Are the data complete? If not, what is missing and what concerns does it raise?</h3>
-<p></p>
+<p>One completeness error that become evident when I put the resorts on the map was geolocations.
+The original data file included both resort names and the states in which the resorts were located.
+While the two piece together are enough information to determine where all the resorts are located, the individually
+parsed data (used for considering the data in other ways) introduced ambiguity. In some cases, there are some resorts with the same, or similar
+names in distinct geographical areas. This can be seen in the map visualizations; Fusion Tables searched for the appropriate location based on the
+resort name, but there was a small degree of ambiguity (seen, for example, in the supposed ski resorts in Florida.)</p>
+<p>A second limitation, and I would argue, completeness error, of these data is the fact that it only spans one day. It is a very brief snapshot in time,
+which is relatively non-consequential for the ski resort as a whole. It lists the base depth and ratings, but with a sample of one day, any correlations are impossible
+to determine. What would be more interesting and more complete would be a look at annual or monthly snowfall, and ratings at these various time points. This would be 
+more telling as to whether there are any correlations between the quality of the snow and the rating of the ski resort.</p>
+<p>Finally some of the ratings are missing from the dataset. This makes it difficult to compare ratings across ski resr</p>
 
 <h2>Coherence</h2>
 <h3>Do the data make sense relative to themselves?</h3>
+<p>The reported results make sense based on my basic understanding of snowfall at ski areas. Since ski areas tend to be in the mountains, a small amount of snow
+(<2"> is reasonable to expect with a small snowstorm, and most of these results show little or no snow accumulation, which is to be expected of normal conditions.
+None of the data values are particularly extreme compared to the others, but it is difficult to determine where all the ratings are coming from. </p>
 
 <h2>Correctness</h2>
 <h3>What aspects of the data can you verify</h3>
