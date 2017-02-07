@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+    <title>Byte 1 Tutorial</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/theme.css" rel="stylesheet">
+  </head>
+
+  <body role="document">
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/about">Data Quality</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container theme-showcase" role="main">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+	<h1>About</h1>
+        <p>Byte 2 was concerned with looking at the 4 C's of data quality. This is a discussion of the data quality</p>
+      </div>
+
+<h2>Completeness</h2>
+<h3>Are the data complete? If not, what is missing and what concerns does it raise?</h3>
+<p></p>
+
+<h2>Coherence</h2>
+<h3>Do the data make sense relative to themselves?</h3>
+
+<h2>Correctness</h2>
+<h3>What aspects of the data can you verify</h3>
+<p>Snowfall is well tracked and recorded for ski resorts. Using the <a href="http://www.onthesnow.com/wyoming/jackson-hole/historical-snowfall.html?&y=2012">On The Snow</a>
+website, I could look at individual ski resort snow reports for the reported day from the dataset I found (December 30, 2012). Comparing across a pseudorandom subset
+of the ski resorts, I compared the reported snowfall to their recorded 24" snowfall. I also used the "max base depth" and "average base depth" fields to verify whether
+the reported numbers were reasonable. These values did seem to be correct.</p>
+
+<h2>Accountability</h2>
+<h3>Where did the data come from, and who has access to them?</h3>
+<p>These data came from a <a href = "https://www.google.com/url?sa=t&rct=j&ei=iCuZWJ2DEc2NpAPsz7iIBA&url=https://www.google.com/fusiontables/DataSource%3Fdocid%3D1UvKGchZrRW4BR-bQ8hGzNu2U22Ab3lazVB7Rf2w&source=webtables&q=us%20ski%20resort&cad=res&cd=1&usg=AFQjCNHJjdqjuETx_dCGMXhFT3HBjeeGfA&sig2=YJYn6jK3nPEBjsqWMfYdoA">publically available Fusion Table</a>.
+However, the dataset does not list its source. Without attribution, it is very difficult to 
+have any confidence in the quality of the data. I selected this data source for this Byte knowing that it was not accountable
+because I found that interesting. It lists reviews and ratings, but gives no sources. While the weather activity around that period
+is traceable, the reviews are not, so these data may represent a very skewed sample.</p>
+
+</div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/docs.min.js"></script>
+  </body>
+</html>
