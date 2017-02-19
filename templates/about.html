@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="favicon.ico">
-    <title>Jordan Marks Byte 2</title>
+    <title>About This Data</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -34,8 +34,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="/">Home</a></li>
-            <li><a href="/about">Data Quality</a></li>
+            <li><a href="/">Home</a></li>
+            <li  class="active"><a href="/about">About This Data Set</a></li>
+            <li><a href="/quality">Data Quality</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -45,61 +46,23 @@
 
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
-	<h1>Data Quality</h1>
-        <p>Byte 2 was concerned with looking at the 4 C's of data quality. This is a discussion of quality of the ski resort data.</p>
+	<h1>Accountability: About This Data Set</h1>
+        <p>Write a brief summary about the data set here</a></p>
       </div>
 
-<h2>General Data Cleaning Approaches</h2>
-<p>The main cleaning efforts involved in using <a href = "https://www.google.com/url?sa=t&rct=j&ei=iCuZWJ2DEc2NpAPsz7iIBA&url=https://www.google.com/fusiontables/DataSource%3Fdocid%3D1UvKGchZrRW4BR-bQ8hGzNu2U22Ab3lazVB7Rf2w&source=webtables&q=us%20ski%20resort&cad=res&cd=1&usg=AFQjCNHJjdqjuETx_dCGMXhFT3HBjeeGfA&sig2=YJYn6jK3nPEBjsqWMfYdoA">this dataset</a> were involved with converting the different datatypes into more meaningful measurements.
-As shown in the following figure, all of the fields in the original dataset were text fields. </p>
-<img src="templates/original_data_file.JPG" alt="Original Fusion Table" style="width:500px;height:200px;">
-<p></p>
-<p>The data cleaning which took place involved the manipulation
-of these fields into more meaningful types, such as numeric fields for the number of lists open that actually allow comparisons of the percentage of open lifts.
-Another example is in the reviews column; the original dataset included both the rating and the number of reviewers as one value; these were split using Wrangler
-to become more useful.</p>
-<p>The other main effort involved in the data cleaning was considering which data were useful. The original dataset did not include attribution, a limitation
-I'll discuss in more detail below, but I had to make some inferences about what different values meant. For example, some resorts have a rating of 0, but this is
-because the original dataset mined data that included no reviews for these ski resorts, not because these ski resorts are so terrible.</p>
+    
+      <div class="page-header">
+	<h2>Where did this data come from?</h2>
+	<p>fill in</p>
+      </div>
+      
+      <div class="page-header">
+	<h2>Who has access to it?</h2>
+	<p>fill in</p>
+      </div>
 
-<h2>Data Quality Discussions</h2>
-<h3>Completeness</h3>
-<p>One completeness error that become evident when I put the resorts on the map was geolocations.
-The original data file included both resort names and the states in which the resorts were located.
-While the two piece together are enough information to determine where all the resorts are located, the individually
-parsed data (used for considering the data in other ways) introduced ambiguity. In some cases, there are some resorts with the same, or similar
-names in distinct geographical areas. This can be seen in the map visualizations; Fusion Tables searched for the appropriate location based on the
-resort name, but there was a small degree of ambiguity (seen, for example, in the supposed ski resorts in Florida). The consequences of this ambiguity
-mean that looking at these data geographically may not be a meaningful way to compare the data without knowing if they are in their original geographic location.</p>
-<p>A second limitation, and I would argue, completeness error, of these data is the fact that it only spans one day. It is a very brief snapshot in time,
-which is relatively non-consequential for the ski resort as a whole. It lists the base depth and ratings, but with a sample of one day, any correlations are impossible
-to determine. What would be more interesting and more complete would be a look at annual or monthly snowfall, and ratings at these various time points. This would be 
-more telling as to whether there are any correlations between the quality of the snow and the rating of the ski resort.</p>
-<p>Finally some of the ratings are missing from the dataset. These ratings were originally coded at "0", so these were removed so the histograms are not misrepresentative.</p>
 
-<h3>Coherence</h3>
-<p>The reported results make sense based on my basic understanding of snowfall at ski areas. Since ski areas tend to be in the mountains, a small amount of snow
-(< 2") is reasonable to expect with a small snowstorm, and most of these results show little or no snow accumulation, which is to be expected of normal conditions.
-None of the data values are particularly extreme compared to the others, but it is difficult to determine where all the ratings are coming from. Looking at ski
-areas that are geographically close to one another, the data show similar snowfall and base depths at each area, which provides a good argument for coherence. </p>
-
-<h3>Correctness</h3>
-<p>Snowfall is well tracked and recorded for ski resorts. Using the <a href="http://www.onthesnow.com/wyoming/jackson-hole/historical-snowfall.html?&y=2012">On The Snow</a>
-website, I could look at individual ski resort snow reports for the reported day from the dataset I found (December 30, 2012). Comparing across a pseudorandom subset
-of the ski resorts, I compared the reported snowfall to their recorded 24" snowfall. I also used the "max base depth" and "average base depth" fields to verify whether
-the reported numbers were reasonable. These values did seem to be correct.</p>
-
-<h3>Accountability</h3>
-<p>These data came from a <a href = "https://www.google.com/url?sa=t&rct=j&ei=iCuZWJ2DEc2NpAPsz7iIBA&url=https://www.google.com/fusiontables/DataSource%3Fdocid%3D1UvKGchZrRW4BR-bQ8hGzNu2U22Ab3lazVB7Rf2w&source=webtables&q=us%20ski%20resort&cad=res&cd=1&usg=AFQjCNHJjdqjuETx_dCGMXhFT3HBjeeGfA&sig2=YJYn6jK3nPEBjsqWMfYdoA">publically available Fusion Table</a>.
-However, the dataset does not list its source. Without attribution, it is very difficult to 
-have any confidence in the quality of the data. I selected this data source for this Byte knowing that it was not accountable
-because I found that interesting. It lists reviews and ratings, but gives no sources - as I use the data, I have no idea how to know who they sampled
-the get the reviews of the ski areas. While the weather activity around that period
-is traceable, the reviews are not, so these data may represent a very skewed sample of skiers. Perhaps the only people who rate ski resorts are people who regularly
-visit particular ones, skewing the data higher. Or perhaps one of the resorts with only one review was representative of somebody who had a very bad experience.
-Without knowledge of how the reviews were collected, it is difficult to make any meaningful conclusions from these data.</p>
-
-</div> <!-- /container -->
+    </div> <!-- /container -->
 
 
     <!-- Bootstrap core JavaScript

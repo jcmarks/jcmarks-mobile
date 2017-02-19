@@ -53,7 +53,6 @@ import httplib2
 import uritemplate
 
 # Local imports
-from googleapiclient import _auth
 from googleapiclient import mimeparse
 from googleapiclient.errors import HttpError
 from googleapiclient.errors import InvalidJsonError
@@ -61,10 +60,7 @@ from googleapiclient.errors import MediaUploadSizeError
 from googleapiclient.errors import UnacceptableMimeTypeError
 from googleapiclient.errors import UnknownApiNameOrVersion
 from googleapiclient.errors import UnknownFileType
-from googleapiclient.http import build_http
 from googleapiclient.http import BatchHttpRequest
-from googleapiclient.http import HttpMock
-from googleapiclient.http import HttpMockSequence
 from googleapiclient.http import HttpRequest
 from googleapiclient.http import MediaFileUpload
 from googleapiclient.http import MediaUpload
@@ -73,15 +69,8 @@ from googleapiclient.model import MediaModel
 from googleapiclient.model import RawModel
 from googleapiclient.schema import Schemas
 from oauth2client.client import GoogleCredentials
-
-# Oauth2client < 3 has the positional helper in 'util', >= 3 has it
-# in '_helpers'.
-try:
-  from oauth2client.util import _add_query_parameter
-  from oauth2client.util import positional
-except ImportError:
-  from oauth2client._helpers import _add_query_parameter
-  from oauth2client._helpers import positional
+from oauth2client.util import _add_query_parameter
+from oauth2client.util import positional
 
 
 # The client library requires a version of httplib2 that supports RETRIES.
@@ -93,12 +82,8 @@ URITEMPLATE = re.compile('{[^}]*}')
 VARNAME = re.compile('[a-zA-Z0-9_-]+')
 DISCOVERY_URI = ('https://www.googleapis.com/discovery/v1/apis/'
                  '{api}/{apiVersion}/rest')
-V1_DISCOVERY_URI = DISCOVERY_URI
-V2_DISCOVERY_URI = ('https://{api}.googleapis.com/$discovery/rest?'
-                    'version={apiVersion}')
 DEFAULT_METHOD_DOC = 'A description of how to use this function'
 HTTP_PAYLOAD_METHODS = frozenset(['PUT', 'POST', 'PATCH'])
-
 _MEDIA_SIZE_BIT_SHIFTS = {'KB': 10, 'MB': 20, 'GB': 30, 'TB': 40}
 BODY_PARAMETER_DEFAULT_VALUE = {
     'description': 'The request body.',
@@ -107,12 +92,6 @@ BODY_PARAMETER_DEFAULT_VALUE = {
 }
 MEDIA_BODY_PARAMETER_DEFAULT_VALUE = {
     'description': ('The filename of the media request body, or an instance '
-                    'of a MediaUpload object.'),
-    'type': 'string',
-    'required': False,
-}
-MEDIA_MIME_TYPE_PARAMETER_DEFAULT_VALUE = {
-    'description': ('The MIME type of the media request body, or an instance '
                     'of a MediaUpload object.'),
     'type': 'string',
     'required': False,
@@ -200,8 +179,7 @@ def build(serviceName,
     model: googleapiclient.Model, converts to and from the wire format.
     requestBuilder: googleapiclient.http.HttpRequest, encapsulator for an HTTP
       request.
-    credentials: oauth2client.Credentials or
-      google.auth.credentials.Credentials, credentials to be used for
+    credentials: oauth2client.Credentials, credentials to be used for
       authentication.
     cache_discovery: Boolean, whether or not to cache the discovery doc.
     cache: googleapiclient.discovery_cache.base.CacheBase, an optional
@@ -216,27 +194,23 @@ def build(serviceName,
       }
 
   if http is None:
-    discovery_http = build_http()
-  else:
-    discovery_http = http
+    http = httplib2.Http()
 
-  for discovery_url in (discoveryServiceUrl, V2_DISCOVERY_URI,):
-    requested_url = uritemplate.expand(discovery_url, params)
+  requested_url = uritemplate.expand(discoveryServiceUrl, params)
 
-    try:
-      content = _retrieve_discovery_doc(
-        requested_url, discovery_http, cache_discovery, cache)
-      return build_from_document(content, base=discovery_url, http=http,
-          developerKey=developerKey, model=model, requestBuilder=requestBuilder,
-          credentials=credentials)
-    except HttpError as e:
-      if e.resp.status == http_client.NOT_FOUND:
-        continue
-      else:
-        raise e
+  try:
+    content = _retrieve_discovery_doc(requested_url, http, cache_discovery,
+                                      cache)
+  except HttpError as e:
+    if e.resp.status == http_client.NOT_FOUND:
+      raise UnknownApiNameOrVersion("name: %s  version: %s" % (serviceName,
+                                                               version))
+    else:
+      raise e
 
-  raise UnknownApiNameOrVersion(
-        "name: %s  version: %s" % (serviceName, version))
+  return build_from_document(content, base=discoveryServiceUrl, http=http,
+      developerKey=developerKey, model=model, requestBuilder=requestBuilder,
+      credentials=credentials)
 
 
 def _retrieve_discovery_doc(url, http, cache_discovery, cache=None):
@@ -322,61 +296,48 @@ def build_from_document(
     model: Model class instance that serializes and de-serializes requests and
       responses.
     requestBuilder: Takes an http request and packages it up to be executed.
-    credentials: oauth2client.Credentials or
-      google.auth.credentials.Credentials, credentials to be used for
-      authentication.
+    credentials: object, credentials to be used for authentication.
 
   Returns:
     A Resource object with methods for interacting with the service.
   """
 
-  if http is not None and credentials is not None:
-    raise ValueError('Arguments http and credentials are mutually exclusive.')
+  if http is None:
+    http = httplib2.Http()
+
+  # future is no longer used.
+  future = {}
 
   if isinstance(service, six.string_types):
     service = json.loads(service)
-
-  if  'rootUrl' not in service and (isinstance(http, (HttpMock,
-                                                      HttpMockSequence))):
-      logger.error("You are using HttpMock or HttpMockSequence without" +
-                   "having the service discovery doc in cache. Try calling " +
-                   "build() without mocking once first to populate the " +
-                   "cache.")
-      raise InvalidJsonError()
-
   base = urljoin(service['rootUrl'], service['servicePath'])
   schema = Schemas(service)
 
-  # If the http client is not specified, then we must construct an http client
-  # to make requests. If the service has scopes, then we also need to setup
-  # authentication.
-  if http is None:
-    # Does the service require scopes?
-    scopes = list(
-      service.get('auth', {}).get('oauth2', {}).get('scopes', {}).keys())
+  if credentials:
+    # If credentials were passed in, we could have two cases:
+    # 1. the scopes were specified, in which case the given credentials
+    #    are used for authorizing the http;
+    # 2. the scopes were not provided (meaning the Application Default
+    #    Credentials are to be used). In this case, the Application Default
+    #    Credentials are built and used instead of the original credentials.
+    #    If there are no scopes found (meaning the given service requires no
+    #    authentication), there is no authorization of the http.
+    if (isinstance(credentials, GoogleCredentials) and
+        credentials.create_scoped_required()):
+      scopes = service.get('auth', {}).get('oauth2', {}).get('scopes', {})
+      if scopes:
+        credentials = credentials.create_scoped(list(scopes.keys()))
+      else:
+        # No need to authorize the http object
+        # if the service does not require authentication.
+        credentials = None
 
-    # If so, then the we need to setup authentication.
-    if scopes:
-      # If the user didn't pass in credentials, attempt to acquire application
-      # default credentials.
-      if credentials is None:
-        credentials = _auth.default_credentials()
-
-      # The credentials need to be scoped.
-      credentials = _auth.with_scopes(credentials, scopes)
-
-      # Create an authorized http instance
-      http = _auth.authorized_http(credentials)
-
-    # If the service doesn't require scopes then there is no need for
-    # authentication.
-    else:
-      http = build_http()
+    if credentials:
+      http = credentials.authorize(http)
 
   if model is None:
     features = service.get('features', [])
     model = JsonModel('dataWrapper' in features)
-
   return Resource(http=http, baseUrl=base, model=model,
                   developerKey=developerKey, requestBuilder=requestBuilder,
                   resourceDesc=service, rootDesc=service, schema=schema)
@@ -497,7 +458,7 @@ def _fix_up_parameters(method_desc, root_desc, http_method):
 
 
 def _fix_up_media_upload(method_desc, root_desc, path_url, parameters):
-  """Adds 'media_body' and 'media_mime_type' parameters if supported by method.
+  """Updates parameters of API by adding 'media_body' if supported by method.
 
   SIDE EFFECTS: If the method supports media upload and has a required body,
   sets body to be optional (required=False) instead. Also, if there is a
@@ -534,7 +495,6 @@ def _fix_up_media_upload(method_desc, root_desc, path_url, parameters):
   if media_upload:
     media_path_url = _media_path_url_from_info(root_desc, path_url)
     parameters['media_body'] = MEDIA_BODY_PARAMETER_DEFAULT_VALUE.copy()
-    parameters['media_mime_type'] = MEDIA_MIME_TYPE_PARAMETER_DEFAULT_VALUE.copy()
     if 'body' in parameters:
       parameters['body']['required'] = False
 
@@ -768,7 +728,6 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
         actual_path_params[parameters.argmap[key]] = cast_value
     body_value = kwargs.get('body', None)
     media_filename = kwargs.get('media_body', None)
-    media_mime_type = kwargs.get('media_mime_type', None)
 
     if self._developerKey:
       actual_query_params['key'] = self._developerKey
@@ -792,11 +751,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
     if media_filename:
       # Ensure we end up with a valid MediaUpload object.
       if isinstance(media_filename, six.string_types):
-        if media_mime_type is None:
-          logger.warning(
-              'media_mime_type argument not specified: trying to auto-detect for %s',
-              media_filename)
-          media_mime_type, _ = mimetypes.guess_type(media_filename)
+        (media_mime_type, encoding) = mimetypes.guess_type(media_filename)
         if media_mime_type is None:
           raise UnknownFileType(media_filename)
         if not mimeparse.best_match([media_mime_type], ','.join(accept)):
