@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="author" content="Jordan Marks">
     <link rel="icon" href="favicon.ico">
-    <title>Mobile Byte Tutorial</title>
+    <title>Mobile Byte - Data Usage</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -30,6 +30,7 @@
 	      margin-right: 5px;
 	    }
 	  </style>
+	 
   </head>
 
   <body role="document">
@@ -59,11 +60,23 @@
 
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
-	<h1>Data Pipeline Project Mobile Byte Example</h1>
-        <p>This is the Mobile Byte of the Data Pipeline class.</p>
+	<h1>Data Pipeline Project Mobile Byte</h1>
+        <p>Comparing my phone usage to others.</p>
       </div>
-
-   <h2>Query Results</h2>
+      
+  <h2>Research Questions and Data Collection</h2>
+  <div> 
+  <p>In this Byte, I was interested in doing a comparison of my phone usage to several other usage studies completed, as reported in the
+  <a href="http://delivery.acm.org/10.1145/2630000/2628380/p243-banovic.pdf?ip=128.237.205.104&id=2628380&acc=ACTIVE%20SERVICE&key=A792924B58C015C1%2E5A12BE0369099858%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35&CFID=730334629&CFTOKEN=51578275&__acm__=1487631640_fe9afa66932f221bd08d78e476faca55">ProactiveTasks</a> paper. When we read this paper early in the term, I was struck by the frequency of short interactions with the phone. One 
+  limitation we had discussed about this paper is the small number of samples they used, 10 people. I was interested in learning whether the
+  trends identified in that sample set would generalize to the ways that I interact with my phone.</p>
+  <p>To answer whether my phone usage fits within the sample collected for the InteractiveTasks paper, I had to look at the duration and frequency
+  of interactions with my phone. AWARE collected time and duration information for times that my screen was on and off, and I used that data to 
+  perform the bulk of my analysis.</p>
+  <p>Particular questions I was interested in answering were the following:</p>
+  </div>
+<!-- 
+  <h2>Query Results</h2>
    <ul>
    {% for item in queries %}
    <li>Query: {{item.query}}<br>
@@ -73,63 +86,60 @@
    </li>
    {% endfor %}
    </ul>
+   -->
    
-   <h2>Vega-lite Chart</h2>
-   
-   <!-- Example of Vega-lite graph -->
-   <div id="vis"></div>
-   <!-- Vega-lite graphing code. -->
-   <script>
-	  // Assign the specification to a local variable vlSpec.
-	  var vlSpec = {
-	    "data": {
-	      "values": [
-			{% for row in queries[0].results %}
-          		{"date": "{{row[0]}}", "count": {{row[1]}}},
-       		{% endfor %}
-	      ]
-	    },
-	    "mark": "bar",
-	    "encoding": {
-	      "x": {
-	      	"field": "date", "type": "nominal",
-		    "axis": {
-		        "title": "Date"
-		     }},
-	      "y": {
-	        "field": "count", "type": "quantitative",
-	        "axis": {
-	          "title": "Record Count"
-	        }
-	      }
-	    }
-	  };
-	
-	  var embedSpec = {
-	    mode: "vega-lite",  // Instruct Vega-Embed to use the Vega-Lite compiler
-	    spec: vlSpec
-	    // You can add more vega-embed configuration properties here.
-	    // See https://github.com/vega/vega/wiki/Embed-Vega-Web-Components#configuration-propeties for more information.
-	  };
-	
-	  // Embed the visualization in the container with id `vis`
-	  vg.embed("#vis", embedSpec, function(error, result) {
-	    // Callback receiving the View instance and parsed Vega spec
-	    // result.view is the View, which resides under the '#vis' element
-	  });
-  </script>
+   <h2>Data Usage</h2>
+   <p>To begin my comparison, I plotted the frequency of different types of interactions. Banovic et al. report a histogram, shown here, that 
+   shows high frequency of phone usage in short durations, with diminishing use at higher lengths of time. My data were compared to these,
+   except that the time scale was extended up to 10 minutes+ of interaction time, rather than 4 minutes.</p>
+   <img src="templates/Banovic.JPG" alt="Banovic Histogram" style="width:550px;height:350px;">
+   <img src="templates/histogram.png" alt="My Histogram" style="width:550px;height:350px;">
+   <p style="clear: both;">
+   <p>The graphs exhibit a similar shapes on the low interaction time end. There are a high number of interactions of a very shot duration, with
+   decreasing frequency. Also similarly, my data exhibit a natural break, though this occurs around 65 rather than around 60 seconds as reported in
+   the referenced paper. Of note, my personal data show a spike for interactions of length greater than 10 minutes that was not present in the
+   comparative figure. It appears that I might be using my phone in a way that is atypical of average users.</p>
+   <p>To take a deeper consideration of the differences in the distributions, I compared the types of uses as presented in the ProactiveTasks paper.</p>
+	<p>Falaki et al. (2010) found that mobile data usage varies dramatically, with mean usage time between 10 and 250 seconds. My usage falls within that,
+	with a mean usage time of 220 seconds.</p>
+	<p>Yan et al. (2012) found that 50% of the interactions people have with their phones are less than 30 seconds, and 90% of the interactions are
+	less than 4 minutes long. I found that only 32% of my interactions were less than 30 seconds long, 90.6% of my interactions were under four minutes.</p>
+	<p>Finally, I compared my data to the terms presented in the ProactiveTasks paper, with the discussion of glance, review, and engage sessions. This
+	paper found the following:</p>
+	<ul style="float: left; min-width: 500px;">
+	<li>Glance median device usage: 46.6%</li>
+	<li>Review median device usage: 24.6%</li>
+	<li>Engage median device usage: 22.1%</li>
+	</ul>
 
-   <div class="page-header">
-		<p> You should add information here, including some tables
-		and/or charts, telling the reader about the relationship
-		  between time and activity in your data.</p>
+   	<img src="templates/usage_types.png" alt="My Usage Types" style="float: left;width:200px;height:200px;">
+ <p style="clear: both;">
+   <p>As seen in my distribution, we see the heavy prevalence of these long-duration interactions: approximately 55% of my interactions are longer
+   than a minute in duration. The combination of all these long interactions led to a grand total of 30 hours on my phone through the course of this study.</p>
+   
+   <h2>Data Analysis</h2>
+   <p>To rationalize why I was exhibiting so much more long-duration phone usage than the users reported in the ProactiveTasks work, I looked at
+   further analysis of the phone usage over the different days. I considered both total usage time and mean usage time for each day of the study;
+   mean time on the phone is shown here.</p>
+   	<img src="templates/mean usage time.png" alt="My Mean Usage per Day" style="width:600px;height:400px;">
+   <p>A meta-analysis of my patterns during this study duration was illuminating to determine some of the source of the longer phone use. I have signed
+   up for the Pittsburgh Marathon, and as such, have been running frequently. During these runs, I have been using my phone as a stopwatch for time trials.
+   Each of these time trials lasts 10 to 30 minutes, during which I keep the phone screen on so I can easily glance at it to observe when the time trial 
+   is complete. This figure shows the running days, in black, mapped onto the mean phone usage.</p>
+   	<img src="templates/runs.png" alt="My Runs" style="width:600px;height:400px;">
+	<p>Although this does not account for all the peaks in mean phone usage times, a few things are apparent. First, at least half of the days were running
+	days, which I predict to drive my phone usage up. Second, there is some correlation between the peak days and the high mean usage times: although
+	I did not perform a rigorous comparison, I can visually observe that many of the days have high .</p>
+	<p>An additional consideration into why my data might not match that of the ProactiveTask findings is that they attributed many of the "glance" interactions
+	to be checking the phone for a time. I wear a wristwatch, so my actions that might be classified as "glancing" are sent to a different data source.</p>
 	
-		<p> You should also add information here, including some tables
-		and/or charts, telling the reader about the relationship
-		between time and location in your data.</p>
-		
-		
-    </div> <!-- /page-header -->
+	<h2>Future Work</h2>
+	<p>I am interested in the possibility of continuing to pursue the question of why my distribution is so heavily weighted towards longer durations.
+	The next analysis I would complete is a study of the correlation of usage time and activity: to see whether my prediction that I use my phone
+	a lot while I run is true, or if I am using more when I am sedentary. I am also intrigued by which applications are demanding my time, to test
+	my prediction that the stopwatch app is driving my long usage durations.</p>
+	<p>Finally, it may be interesting to conduct an experiment to notice how my behavior changes depending on whether or not I am wearing a wristwatch.</p>
+ 
    </div> <!-- /container -->
 
 

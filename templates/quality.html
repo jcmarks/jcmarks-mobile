@@ -46,27 +46,41 @@
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
 	<h1>Quality: About This Data Set</h1>
-        <p>Write a brief summary about the quality of the data set here</a></p>
+        <p>Personal Data Collection: The promises and woes of collecting mobile data</a></p>
       </div>
 
     
       <div class="page-header">
-	<h2>Is the data complete?</h2>
-	<p>If not, what is missing and what concerns does it raise?
-	What is your evidence for this?</p>
+	<h2>Are the data complete?</h2>
+	<p>The phone usage data do seem to be complete. Looking at my data, I plotted activity as a function of time for each day to ensure that
+	there were data throughout the day. Any breaks in the data were a result of times when it made sense for me not to be using my phone: during
+	class times, customer meetings, and during the night (although I was sad to see that the time my phone was off at night was less than I had hoped).</p>
+	<p>An in-process step I took to ensure completeness was to charge my phone each night, and to be sure to carry it with me. Typically, I only charge
+	my phone every few days, but due to AWARE, a daily charge was required to be sure that my usage data would be complete.</p>
       </div>
       
       <div class="page-header">
-	<h2>Is the data coherent?</h2>
-	<p>Does it make sense relative to itself? Does it match your
-	expectations? Are the distributions sensible? What is your
-	evidence for this?</p>
+	<h2>Are the data coherent?</h2>
+	<p>I performed several checks on my data through the course of the analysis to make sure that they were coherent. The first check was the data usage
+	as a function of time: was phone usage being logged during the times when I would be using my phone? As discussed above, the only gaps that I saw
+	in the data were accountable by the times I was asleep, so the times seemed to be coherent. An additional confirmation of coherence is the fact that
+	the distributions on different days looked similar. </p>
+	<img src="templates/feb2.JPG" alt="February 2" style="width:350px;height:240px;">
+	<img src="templates/feb9.JPG" alt="February 9" style="width:350px;height:240px;">
+   <img src="templates/feb10.JPG" alt="February 10" style="width:350px;height:240px;">
+   <p style="clear: both;">
+	<p>The next coherence check I performed was the total amount of time logged: 30 hours in approximately three weeks. Again, this made some intuitive sense
+	to me. I regularly check and respond to emails on my phone, use Skype, and have been using the stopwatch feature to time runs. Although a bit higher
+	that I would like to report (considering productivity arguments), I find this amount of time believable.</p>
+	<p>I finally performed a coherence check on actual times being recorded. At a particular point in time, I looked at my phone for a duration of approximately
+	10 seconds. Having marked that time, I could locate the usage time in the raw data, and confirmed that it was approximately 10 seconds in duration. This
+	gave me confidence that each duration being recorded was coherent.</p>
       </div>
 
       <div class="page-header">
-	<h2>Is the data correct?</h2>
-	<p>What aspects of this data can you verify? How did you do so? What did
-	you find?</p>
+	<h2>Are the data correct?</h2>
+	<p>As mentioned, I performend a cross-check of phone screen on time - I used my phone for a set duration at a set time and then checked in the raw data
+	file to ensure that the measured duration was the same as I had predicted.</p>
       </div>
 
     </div> <!-- /container -->
